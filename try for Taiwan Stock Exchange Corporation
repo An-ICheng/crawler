@@ -1,3 +1,30 @@
-import pandas as pd
-import datetime
 import requests
+import json
+import pandas as pd
+date = '2019-12-27'
+date = date.replace('-','')
+url_twse = 'https://www.twse.com.tw/exchangeReport/BWIBBU_d?response=json&date={}&selectType=ALL'.format(date)
+response = requests.get(url_twse)
+# content = json.loads(request.text)
+
+
+
+response.json().keys()
+colunme_name = response.json()['fields']
+data = response.json()['data']
+data = pd.DataFrame(list(data))
+data.columns = colunme_name
+data.columns
+
+
+for date in 
+
+def crawler(date):
+# 時間轉文字 2019-12-27
+# '2019-12-27'.replace('-','')
+
+
+    return data
+
+# 建爬蟲def (把上面code 丟下來 input date output data)
+# 寫date for 迴圈
