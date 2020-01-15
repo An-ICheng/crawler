@@ -28,3 +28,61 @@ def crawler(date):
 
 # 建爬蟲def (把上面code 丟下來 input date output data)
 # 寫date for 迴圈
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# input date('2019-12-12') in string format and output in list format
+# '2019-12-12' 在一開始可以跟dates變數裡的日期不一樣，但dates變數裡的日期輸入什麼這裡就會變成什麼
+def create_date(date: str = '2019-12-12')->list:
+    # input: str = '2019-12-12'
+    # output: list
+    # 告訴電腦date的格式是"%Y-%m-%d"
+    start = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+    end = datetime.date.today()
+    # count how many days from start to end
+    day_count = (end - start).days +1 # datetime.timedelta(days=31)
+    # 產生中間每一天
+    # i = 0~31 , day_count = 32
+    result = [ str(start + datetime.timedelta(days = i)) for i in range(day_count) ]
+    return result
+    
+    
+    
+    
+    
+    
+    # crawl data and time sleep for crawler
+def crawler(date):
+    # 時間轉文字 2019-12-27
+    # '2019-12-27'.replace('-','')
+    url_date = date.replace('-','')
+    url_twse = f'https://www.twse.com.tw/exchangeReport/BWIBBU_d'\
+                f'?response=json&date={url_date}&selectType=ALL'
+    time.sleep(5)
+    response = requests.get(url_twse)
+    if response.json()['stat'] == '很抱歉，沒有符合條件的資料!':
+        # return vacant value回傳空值且以dataframe形式
+        return pd.DataFrame()
+    # response.json() will make data becoming json format
+    colunme_name = response.json()['fields']
+    data = response.json()['data']
+    data = pd.DataFrame(list(data))
+    data.columns = colunme_name
+    data['date'] = date
+    return data
+    
+    
+    
+# 給一個是dataframe的空間且名為data
+data = pd.DataFrame()
+# type of dates is list
+dates = create_date(date = '2020-01-08')
+
+for date in dates:
+    print(date)
+    value = crawler(date)
+    # 把資料放進名為data的空間
+    data = data.append(value)
+
+data
