@@ -1,0 +1,25 @@
+def crawler_twse(self, date: str) -> pd.DataFrame:
+        url_twse = (
+            f"https://www.tpex.org.tw/web/stock/aftertrading/"
+            f"peratio_analysis/pera_result.php?l=zh-tw&_"
+        )
+        time.sleep(5)
+        response = requests.get(url_twse)
+        if response.json()["stat"] == "很抱歉，沒有符合條件的資料!":
+            # return vacant value回傳空值且以dataframe形式
+            return pd.DataFrame()
+
+        datetime = response.json()["datetime"]
+        data = response.json()["aaData"]
+        data = pd.DataFrame(data)
+        data.columns = [
+            "stock_id",
+            "stock_name",
+            "PER",
+            "DPS",
+            "dividend_year",
+            "dividend_yield",
+            "PBR"
+            ]
+        data["dividend_year"] = data["dividend_year"].astype(int) + 1911
+        return data
